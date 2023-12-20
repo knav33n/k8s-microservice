@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: api-gateway
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - image: richardchesterwood/k8s-fleetman-api-gateway:release2
+        name: k8s-fleetman-api-gateway
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: production-microservice
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: api-gateway
+  name: fleetman-api-gateway
+spec:
+  ports:
+  - name: 8080-30030
+    port: 8080
+    protocol: TCP
+  selector:
+    app: api-gateway
+  type: ClusterIP
